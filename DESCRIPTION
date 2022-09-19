@@ -1,0 +1,14 @@
+Package: graphql.parse
+Type: Package
+Title: Parse GraphQL Syntax/Schema
+Version: 0.1.0
+Authors@R: c(
+   person("Jonathan", "Carroll", email = "jonathan.carroll@hibio.com", role = c("aut", "cre"))
+ )
+Maintainer: Jonathan Carroll <jonathan.carroll@hibio.com>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.1

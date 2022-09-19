@@ -1,0 +1,63 @@
+---
+output: github_document
+always_allow_html: true
+editor_options: 
+  chunk_output_type: console
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# graphql.parse
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of graphql.parse is to parse GraphQL schemas in an R-style way
+
+## Installation
+
+You can install the development version of graphql.parse like so:
+
+``` r
+remotes::install_github("HIBio/graphql.parse)
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example}
+library(graphql.parse)
+schema <- httr::content(httr::GET("https://api.platform.opentargets.org/api/v4/graphql/schema"))
+schema_els <- strsplit(schema, "(?<=})", perl = TRUE)[[1]]
+# drop blank lines
+schema_els <- gsub("\n\n", "\n", schema_els)
+classes <- sapply(schema_els, detect_class)
+splits <- split(schema_els, classes)
+types <- splits$type
+types2 <- setNames(types, sapply(sapply(types, parse_elements), \(x) x$object_class))
+```
+
+Note the complicating subquery classes (denoted by entry `subquery_class`)!
+
+```{r parse}
+qry <- types2[names(types2) == "Disease"]
+cat(qry)
+x <- parse_elements(qry)
+purrr::map(x, ~if (utils::hasName(.x, "subquery_class")) {
+  purrr::map(.x, tibble::as_tibble) 
+} else {
+  tibble::as_tibble(.x)
+})
+
+jsonview::json_tree_view(x)
+```
