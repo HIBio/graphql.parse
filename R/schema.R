@@ -144,8 +144,15 @@ list_elements <- function(type) {
  .NotYetImplemented()
 }
 
-query_builder <- function() {
-  schema <- httr::content(httr::GET("https://api.platform.opentargets.org/api/v4/graphql/schema"))
+#' Build a GraphQL Query String
+#'
+#' @param api_url URL of the API from which to read schema
+#'
+#' @return a query string, possibly to be used in [run_query()]
+#' @export
+query_builder <- function(api_url = NULL) {
+  stopifnot(!is.null(api_url))
+  schema <- httr::content(httr::GET(paste0(api_url, "/schema")))
   schema_els <- strsplit(schema, "(?<=})", perl = TRUE)[[1]]
   # drop blank lines
   schema_els <- gsub("\n\n", "\n", schema_els)
@@ -159,50 +166,70 @@ query_builder <- function() {
   # avail_selections <- prev_selections <- tlqry
   sel_stack <- list(tlqry)
   chosen <- 1
-  built_query <- "query gql(FILL_THESE_ARGS) {\n"
+  subquery_args <- NULL
+  built_query <- c("query gql(", "\nFILL_THESE_ARGS", "\n) {")
+  indent <- 1
   while (chosen != 0) {
     avail_selections <- sel_stack[[length(sel_stack)]]
     chosen <- utils::menu(c(names(avail_selections), "up 1 level"), title = paste0("Options in ", this_level, "; Select next level, or 0 to finish"))
     if (chosen == 0) {
-      built_query <- c(built_query, "}")
+      built_query <- closed_braces(built_query, indent, close_all = TRUE)
       break
     }
     if (chosen > length(avail_selections)) {
       if (length(sel_stack) == 1) {
-        built_query <- c(built_query, "\n}")
+        built_query <- closed_braces(built_query, indent, close_all = TRUE)
         break
       } else {
         sel_stack <- sel_stack[-length(sel_stack)]
+        built_query <- closed_braces(built_query, indent)
+        indent <- indent - 1
       }
-      built_query <- c(built_query, "\n}")
       next
     }
-    res <- examine_sel(types2, avail_selections, chosen, this_level)
+    res <- examine_sel(types2, avail_selections, chosen, this_level, indent)
+    subquery_args <- c(subquery_args, process_sq_args(res$subquery_args))
+    indent <- res$indent
     built_query <- c(built_query, res$query)
     if (res$is_sub) sel_stack <- c(sel_stack, list(res$next_avail))
     this_level <- res$level
   }
+  # fill in subquery args
+  built_query[2] <- sub("FILL_THESE_ARGS", paste(subquery_args, collapse = ",\n"), built_query[2])
   cat(built_query)
-  invisible(built_query)
+  invisible(paste(built_query, collapse = ""))
 }
 
-examine_sel <- function(types, x, i, lvl) {
+closed_braces <- function(qry, indent, close_all = FALSE) {
+  if (close_all) {
+    for (i in rev(seq_len(indent))) {
+      qry <- c(qry, paste0("\n", strrep(" ", (i-1)*3L), "}", collapse = ""))
+    }
+  } else {
+    qry <- c(qry, paste0("\n", strrep(" ", (indent-1)*3L), "}", collapse = ""))
+  }
+  qry
+}
+
+process_sq_args <- function(x) {
+  if (nrow(x) == 0) return(NULL)
+  paste(paste0("  $", x$name, ": ", x$class), collapse = ",\n")
+}
+
+examine_sel <- function(types, x, i, lvl, indent) {
   res <- list()
-  # browser()
+  res$subquery_args <- data.frame()
   if (utils::hasName(x[[i]], "subquery_class")) {
     res$is_sub <- TRUE
-    next_class <- parse_elements(types[names(types) == x[[i]]$subquery_class])
+    next_class <- parse_elements(types[names(types) == gsub("\\[|\\]|!", "", x[[i]]$subquery_class)])
     next_class <- next_class[names(next_class) != "object_class"]
     res$next_avail <- next_class
     # identify mandatory arguments
     all_args <- tibble::enframe(x[[i]][-c(1:2)]) |> tidyr::unnest_wider(value)
-    mand_args <- all_args[, all_args$non_nullable]
-    res$query <- if (nrow(mand_args) > 0) {
-      paste0(names(x)[[i]], "(\n  ", paste0(mand_args$name, ": $", mand_args$name, " # ", mand_args$class, "\n"), " ) {\n")
-    } else {
-      paste0(names(x)[[i]], "() {\n")
-    }
+    res$subquery_args <- all_args
+    res$query <- write_args(names(x)[[i]], all_args, indent)
     res$level <- x[[i]]$subquery_class
+    res$indent <- indent + 1
   } else if (! gsub("\\[|\\]|!", "", x[[i]]$class) %in% names(base_formats)) {
     # non-atomic classes can be further subset
     res$is_sub <- TRUE
@@ -210,14 +237,33 @@ examine_sel <- function(types, x, i, lvl) {
     next_class <- parse_elements(types[names(types) == clean_class])
     next_class <- next_class[names(next_class) != "object_class"]
     res$next_avail <- next_class
-    res$query <- paste0(names(x)[[i]], " {\n")
+    res$query <- paste0("\n", strrep(" ", indent*3), names(x)[[i]], " {")
     res$level <- clean_class
+    res$indent <- indent + 1
   } else {
-    # browser()
     res$is_sub <- FALSE
     res$next_avail <- x
     res$level <- lvl
-    res$query <- paste0(names(x)[[i]], "\n")
+    res$indent <- indent
+    res$query <- paste0("\n", strrep(" ", indent*3), names(x)[[i]])
   }
   res
 }
+
+write_args <- function(subqry_name, all_args, indent) {
+  if (nrow(all_args) > 0) {
+    paste0("\n",
+           strrep(" ", indent*3),
+           subqry_name, "(",
+           paste0(
+             paste0(
+               all_args$name, ": $", all_args$name
+             ),
+             collapse = ", "
+           ),
+           ") {")
+  } else {
+    paste0("\n", strrep(" ", indent*3), subqry_name, "() {")
+  }
+}
+

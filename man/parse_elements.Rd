@@ -11,7 +11,7 @@ parse_elements(el, struct = "type", subquery = FALSE)
 }
 \value{
 a list containing `object_class` (name of schema element) and
-  arguments with associated class, description, and nullable flag
+  arguments with associated class, description, and non_nullable flag
 }
 \description{
 Extract elements from the schema
