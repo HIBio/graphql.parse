@@ -1,3 +1,8 @@
+#' Default API endpoint
+#'
+#' @export
+OPENTARGETS_API <- "https://api.platform.opentargets.org/api/v4/graphql"
+
 detect_class <- function(el) {
   # drop comments
   el <- strsplit(el, "\n")[[1]]
@@ -144,19 +149,34 @@ list_elements <- function(type) {
  .NotYetImplemented()
 }
 
+#' Get the schema for a GraphQL API
+#'
+#' @param api_url API query endpoint
+#'
+#' @return a character string containing the schema, which can be used in
+#'   [query_builder()] without re-fetching
+#' @export
+get_schema <- function(api_url = OPENTARGETS_API) {
+  httr::content(httr::GET(paste0(api_url, "/schema")))
+}
+
 #' Build a GraphQL Query String
 #'
-#' @param api_url URL of the API from which to read schema
+#' @param api_url URL of the API from which to read schema. By default this will
+#'   use the OpenTargets API
+#' @param schema a local copy of the schema as a character string
 #'
 #' @return a query string, possibly to be used in [run_query()]
 #' @export
-query_builder <- function(api_url = NULL) {
+query_builder <- function(schema = NULL, api_url = OPENTARGETS_API) {
   stopifnot(!is.null(api_url))
-  schema <- httr::content(httr::GET(paste0(api_url, "/schema")))
+  if (is.null(schema)) {
+    schema <- get_schema(api_url)
+  }
   schema_els <- strsplit(schema, "(?<=})", perl = TRUE)[[1]]
   # drop blank lines
   schema_els <- gsub("\n\n", "\n", schema_els)
-  classes <- sapply(schema_els, graphql.parse:::detect_class)
+  classes <- sapply(schema_els, detect_class)
   splits <- split(schema_els, classes)
   types <- splits$type
   types2 <- setNames(types, sapply(sapply(types, parse_elements), \(x) x$object_class))

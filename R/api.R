@@ -5,7 +5,7 @@
 #'
 #' @return returned data from the API
 #' @export
-run_query <- function(api_url, query_string, variables) {
+run_query <- function(query_string, variables, api_url = OPENTARGETS_API) {
   # Construct POST request body object with query string and variables
   post_body <- list(query = query_string, variables = jsonlite::toJSON(variables, auto_unbox = TRUE))
   # Perform POST request

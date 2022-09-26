@@ -23,8 +23,7 @@ dynamically select the fields they wish to be returned
 
 ``` r
 library(graphql.parse)
-api_url <- "https://api.platform.opentargets.org/api/v4/graphql"
-query_string <- query_builder(api_url)
+query_string <- query_builder()
 ```
 
 ``` bash
@@ -200,7 +199,7 @@ This `query_string` can then be passed along with the necessary
 variables to the API
 
 ``` r
-run_query(api_url, query_string, variables = list(chemblId = "CHEMBL1201828"))
+run_query(query_string, variables = list(chemblId = "CHEMBL1201828"))
 #> $drug
 #> $drug$id
 #> [1] "CHEMBL1201828"
@@ -233,3 +232,29 @@ run_query(api_url, query_string, variables = list(chemblId = "CHEMBL1201828"))
 #> $drug$mechanismsOfAction$rows[[1]]$references[[1]]$urls[[1]]
 #> [1] "http://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=ebcd67fa-b4d1-4a22-b33d-ee8bf6b9c722"
 ```
+
+The schema can also be fetched once then re-used in additional queries
+
+``` r
+schema <- get_schema()
+cat(substring(schema, 1, 50))
+#> type APIVersion {
+#>   x: Int!
+#>   y: Int!
+#>   z: Int!
+#> }
+```
+
+This can then be used in the `query_builder()` without hitting the
+endpoint just to retrieve the schema
+
+``` r
+query_builder(schema = schema)
+```
+
+# Documentation
+
+[This video](https://www.youtube.com/watch?v=_sZR0VxpwqE) provides a
+great overview of the OpenTargets GraphQL API.
+
+[![](https://img.youtube.com/vi/_sZR0VxpwqE/0.jpg)](https://www.youtube.com/watch?v=_sZR0VxpwqE)

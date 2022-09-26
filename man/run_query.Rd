@@ -4,7 +4,7 @@
 \alias{run_query}
 \title{Run a GraphQL query}
 \usage{
-run_query(api_url, query_string, variables)
+run_query(query_string, variables, api_url = OPENTARGETS_API)
 }
 \arguments{
 \item{query_string}{query string, possibly built with [query_builder()]}

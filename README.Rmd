@@ -37,8 +37,7 @@ remotes::install_github("HIBio/graphql.parse)
 
 ```{r example, eval = FALSE}
 library(graphql.parse)
-api_url <- "https://api.platform.opentargets.org/api/v4/graphql"
-query_string <- query_builder(api_url)
+query_string <- query_builder()
 ```
 
 ```{bash, eval = FALSE}
@@ -212,7 +211,6 @@ query gql(
 
 ```{r, echo = FALSE}
 library(graphql.parse)
-api_url <- "https://api.platform.opentargets.org/api/v4/graphql"
 query_string <- "
 query gql( 
    $chemblId: String! 
@@ -240,6 +238,26 @@ query gql(
 This `query_string` can then be passed along with the necessary variables to the API
 
 ```{r}
-run_query(api_url, query_string, variables = list(chemblId = "CHEMBL1201828"))
+run_query(query_string, variables = list(chemblId = "CHEMBL1201828"))
 ```
 
+The schema can also be fetched once then re-used in additional queries
+
+```{r}
+schema <- get_schema()
+cat(substring(schema, 1, 50))
+```
+
+This can then be used in the `query_builder()` without hitting the endpoint just to retrieve the schema
+
+```{r, eval = FALSE}
+query_builder(schema = schema)
+```
+
+# Documentation
+
+[This video][otgraphql] provides a great overview of the OpenTargets GraphQL API.
+
+[![](https://img.youtube.com/vi/_sZR0VxpwqE/0.jpg)](https://www.youtube.com/watch?v=_sZR0VxpwqE)
+
+[otgraphql]: https://www.youtube.com/watch?v=_sZR0VxpwqE

@@ -4,10 +4,13 @@
 \alias{query_builder}
 \title{Build a GraphQL Query String}
 \usage{
-query_builder(api_url = NULL)
+query_builder(schema = NULL, api_url = OPENTARGETS_API)
 }
 \arguments{
-\item{api_url}{URL of the API from which to read schema}
+\item{schema}{a local copy of the schema as a character string}
+
+\item{api_url}{URL of the API from which to read schema. By default this will
+use the OpenTargets API}
 }
 \value{
 a query string, possibly to be used in [run_query()]
