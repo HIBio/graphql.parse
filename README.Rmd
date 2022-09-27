@@ -40,7 +40,7 @@ library(graphql.parse)
 query_string <- query_builder()
 ```
 
-```{bash, eval = FALSE}
+```
 Options in Query; Select next level, or 0 to finish 
 
  1: object_class             2: meta                     3: target                   4: targets               
@@ -207,6 +207,13 @@ query gql(
       } 
    } 
 }
+
+
+Template for variables:
+
+variables = list(
+   chemblId = character(1)
+)
 ```
 
 ```{r, echo = FALSE}

@@ -217,7 +217,32 @@ query_builder <- function(schema = NULL, api_url = OPENTARGETS_API) {
   # fill in subquery args
   built_query[2] <- sub("FILL_THESE_ARGS", paste(subquery_args, collapse = ",\n"), built_query[2])
   cat(built_query)
+  suggest_variables_template(subquery_args)
   invisible(paste(built_query, collapse = ""))
+}
+
+suggest_variables_template <- function(args) {
+  cat("\n\nTemplate for variables:\n\n")
+  args <- trimws(strsplit(paste(args, collapse = ",\n"), ",\n")[[1]])
+  args <- strsplit(args, ": ")
+  args <- lapply(args, function(x) {
+    x[1] <- sub("$", "", x[1], fixed = TRUE)
+    x
+  })
+  args <- lapply(args, function(x) {
+    x[3] <- grepl("!", x[2])
+    x
+  })
+  args <- lapply(args, function(x) {
+    x[2] <- base_formats[match(sub("!", "", x[2], fixed = TRUE), names(base_formats))]
+    x
+  })
+  cat("variables = list(\n")
+  args <- lapply(args, function(x) {
+    paste0(ifelse(x[3], "   ", "  #"), x[1], " = ", x[2], "(1)")
+    })
+  cat(paste(args, collapse = ",\n"))
+  cat("\n)\n")
 }
 
 closed_braces <- function(qry, indent, close_all = FALSE) {
