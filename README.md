@@ -28,13 +28,14 @@ query_string <- query_builder()
 
     Options in Query; Select next level, or 0 to finish 
 
-     1: object_class             2: meta                     3: target                   4: targets               
-     5: disease                  6: diseases                 7: drug                     8: drugs                 
-     9: search                  10: associationDatasources  11: interactionResources    12: geneOntologyTerms     
-    13: up 1 level              
+     1: meta                     2: target                   3: targets               
+     4: disease                  5: diseases                 6: drug                  
+     7: drugs                    8: search                   9: associationDatasources
+    10: interactionResources    11: geneOntologyTerms       12: up 1 level            
+
 
     Selection: 7
-    Options in Drug; Select next level, or 0 to finish 
+    Options in [Drug!]!; Select next level, or 0 to finish 
 
      1: id                          2: name                        3: synonyms                 
      4: tradeNames                  5: yearOfFirstApproval         6: drugType                 
@@ -47,7 +48,7 @@ query_string <- query_builder()
     25: up 1 level                 
 
     Selection: 1
-    Options in Drug; Select next level, or 0 to finish 
+    Options in [Drug!]!; Select next level, or 0 to finish 
 
      1: id                          2: name                        3: synonyms                 
      4: tradeNames                  5: yearOfFirstApproval         6: drugType                 
@@ -262,67 +263,68 @@ specified in `query_builder()`, it is stored in the query string and
 accessible to `run_query`
 
 ``` r
-> qs <- query_builder(api_url = OT_GENETICS_API)
-Options in Query; Select next level, or 0 to finish 
-
- 1: object_class                           2: meta                                
- 3: search                                 4: genes                               
- 5: geneInfo                               6: studyInfo                           
- 7: variantInfo                            8: studiesForGene                      
- 9: studyLocus2GeneTable                  10: manhattan                           
-11: topOverlappedStudies                  12: overlapInfoForStudy                 
-13: tagVariantsAndStudiesForIndexVariant  14: indexVariantsAndStudiesForTagVariant
-15: pheWAS                                16: gecko                               
-17: regionPlot                            18: genesForVariantSchema               
-19: genesForVariant                       20: gwasRegional                        
-21: qtlRegional                           22: studyAndLeadVariantInfo             
-23: gwasCredibleSet                       24: qtlCredibleSet                      
-25: colocalisationsForGene                26: gwasColocalisationForRegion         
-27: gwasColocalisation                    28: qtlColocalisation                   
-29: studiesAndLeadVariantsForGene         30: studiesAndLeadVariantsForGeneByL2G  
-31: up 1 level                            
-
-Selection: 5
-Options in Gene; Select next level, or 0 to finish 
-
- 1: id            2: symbol        3: bioType       4: description   5: chromosome    6: tss        
- 7: start         8: end           9: fwdStrand    10: exons        11: up 1 level   
-
-Selection: 1
-Options in Gene; Select next level, or 0 to finish 
-
- 1: id            2: symbol        3: bioType       4: description   5: chromosome    6: tss        
- 7: start         8: end           9: fwdStrand    10: exons        11: up 1 level   
-
-Selection: 2
-Options in Gene; Select next level, or 0 to finish 
-
- 1: id            2: symbol        3: bioType       4: description   5: chromosome    6: tss        
- 7: start         8: end           9: fwdStrand    10: exons        11: up 1 level   
-
-Selection: 4
-Options in Gene; Select next level, or 0 to finish 
-
- 1: id            2: symbol        3: bioType       4: description   5: chromosome    6: tss        
- 7: start         8: end           9: fwdStrand    10: exons        11: up 1 level   
-
-Selection: 0
-query gql( 
-  $geneId: String! 
-) { 
-   geneInfo(geneId: $geneId) { 
-      id 
-      symbol 
-      description 
-   } 
-}
-
-Template for variables:
-
-variables = list(
-   geneId = character(1)
-)
+qs <- query_builder(api_url = OT_GENETICS_API)
 ```
+
+    Options in Query; Select next level, or 0 to finish 
+
+     1: meta                                   2: search                              
+     3: genes                                  4: geneInfo                            
+     5: studyInfo                              6: variantInfo                         
+     7: studiesForGene                         8: studyLocus2GeneTable                
+     9: manhattan                             10: topOverlappedStudies                
+    11: overlapInfoForStudy                   12: tagVariantsAndStudiesForIndexVariant
+    13: indexVariantsAndStudiesForTagVariant  14: pheWAS                              
+    15: gecko                                 16: regionPlot                          
+    17: genesForVariantSchema                 18: genesForVariant                     
+    19: gwasRegional                          20: qtlRegional                         
+    21: studyAndLeadVariantInfo               22: gwasCredibleSet                     
+    23: qtlCredibleSet                        24: colocalisationsForGene              
+    25: gwasColocalisationForRegion           26: gwasColocalisation                  
+    27: qtlColocalisation                     28: studiesAndLeadVariantsForGene       
+    29: studiesAndLeadVariantsForGeneByL2G    30: up 1 level                          
+
+
+    Selection: 4
+    Options in Gene; Select next level, or 0 to finish 
+
+     1: id            2: symbol        3: bioType       4: description   5: chromosome    6: tss        
+     7: start         8: end           9: fwdStrand    10: exons        11: up 1 level   
+
+    Selection: 1
+    Options in Gene; Select next level, or 0 to finish 
+
+     1: id            2: symbol        3: bioType       4: description   5: chromosome    6: tss        
+     7: start         8: end           9: fwdStrand    10: exons        11: up 1 level   
+
+    Selection: 2
+    Options in Gene; Select next level, or 0 to finish 
+
+     1: id            2: symbol        3: bioType       4: description   5: chromosome    6: tss        
+     7: start         8: end           9: fwdStrand    10: exons        11: up 1 level   
+
+    Selection: 4
+    Options in Gene; Select next level, or 0 to finish 
+
+     1: id            2: symbol        3: bioType       4: description   5: chromosome    6: tss        
+     7: start         8: end           9: fwdStrand    10: exons        11: up 1 level   
+
+    Selection: 0
+    query gql( 
+      $geneId: String! 
+    ) { 
+       geneInfo(geneId: $geneId) { 
+          id 
+          symbol 
+          description 
+       } 
+    }
+
+    Template for variables:
+
+    variables = list(
+       geneId = character(1)
+    )
 
 ``` r
 run_query(qs, variables = list(geneId = "ENSG00000197405"))
