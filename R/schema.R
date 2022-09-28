@@ -188,7 +188,7 @@ query_builder <- function(schema = NULL, api_url = OT_API) {
   # prompt user to select level
   this_level <- "Query"
   tlqry <- parse_elements(types2[names(types2) == this_level])
-  # avail_selections <- prev_selections <- tlqry
+  tlqry <- tlqry[names(tlqry) != "object_class"]
   sel_stack <- list(tlqry)
   chosen <- 1
   subquery_args <- NULL
