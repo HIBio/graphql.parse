@@ -4,7 +4,7 @@
 \alias{get_schema}
 \title{Get the schema for a GraphQL API}
 \usage{
-get_schema(api_url = OPENTARGETS_API)
+get_schema(api_url = OT_API)
 }
 \arguments{
 \item{api_url}{API query endpoint}

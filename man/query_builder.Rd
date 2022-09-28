@@ -4,7 +4,7 @@
 \alias{query_builder}
 \title{Build a GraphQL Query String}
 \usage{
-query_builder(schema = NULL, api_url = OPENTARGETS_API)
+query_builder(schema = NULL, api_url = OT_API)
 }
 \arguments{
 \item{schema}{a local copy of the schema as a character string}

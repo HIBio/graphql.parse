@@ -1,7 +1,12 @@
-#' Default API endpoint
+#' Default OpenTargets API endpoint
 #'
 #' @export
-OPENTARGETS_API <- "https://api.platform.opentargets.org/api/v4/graphql"
+OT_API <- "https://api.platform.opentargets.org/api/v4/graphql"
+
+#' Default OpenTargets Genetics API endpoint
+#'
+#' @export
+OT_GENETICS_API <- "https://api.genetics.opentargets.org/graphql"
 
 detect_class <- function(el) {
   # drop comments
@@ -156,7 +161,7 @@ list_elements <- function(type) {
 #' @return a character string containing the schema, which can be used in
 #'   [query_builder()] without re-fetching
 #' @export
-get_schema <- function(api_url = OPENTARGETS_API) {
+get_schema <- function(api_url = OT_API) {
   httr::content(httr::GET(paste0(api_url, "/schema")))
 }
 
@@ -168,7 +173,7 @@ get_schema <- function(api_url = OPENTARGETS_API) {
 #'
 #' @return a query string, possibly to be used in [run_query()]
 #' @export
-query_builder <- function(schema = NULL, api_url = OPENTARGETS_API) {
+query_builder <- function(schema = NULL, api_url = OT_API) {
   stopifnot(!is.null(api_url))
   if (is.null(schema)) {
     schema <- get_schema(api_url)
@@ -220,6 +225,7 @@ query_builder <- function(schema = NULL, api_url = OPENTARGETS_API) {
   cat(built_query)
   clean_html(built_query)
   suggest_variables_template(subquery_args)
+  attr(built_query, "api_url") <- api_url
   invisible(paste(built_query, collapse = ""))
 }
 

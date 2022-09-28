@@ -5,7 +5,11 @@
 #'
 #' @return returned data from the API
 #' @export
-run_query <- function(query_string, variables, api_url = OPENTARGETS_API) {
+run_query <- function(query_string, variables, api_url = OT_API) {
+  # if query_string has an attached api_url, use that
+  if (!is.null(stored_url <- attr(query_string, "api_url"))) {
+    api_url <- stored_url
+  }
   # Construct POST request body object with query string and variables
   post_body <- list(query = query_string, variables = jsonlite::toJSON(variables, auto_unbox = TRUE))
   # Perform POST request
