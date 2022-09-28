@@ -187,9 +187,10 @@ query_builder <- function(schema = NULL, api_url = OPENTARGETS_API) {
   sel_stack <- list(tlqry)
   chosen <- 1
   subquery_args <- NULL
-  built_query <- c("query gql(", "\nFILL_THESE_ARGS", "\n) {")
+  built_query <- c("query gql(", "\nARGS", "\n) {")
   indent <- 1
   while (chosen != 0) {
+    clean_html(built_query)
     avail_selections <- sel_stack[[length(sel_stack)]]
     chosen <- utils::menu(c(names(avail_selections), "up 1 level"), title = paste0("Options in ", this_level, "; Select next level, or 0 to finish"))
     if (chosen == 0) {
@@ -215,8 +216,9 @@ query_builder <- function(schema = NULL, api_url = OPENTARGETS_API) {
     this_level <- res$level
   }
   # fill in subquery args
-  built_query[2] <- sub("FILL_THESE_ARGS", paste(subquery_args, collapse = ",\n"), built_query[2])
+  built_query[2] <- sub("ARGS", paste(subquery_args, collapse = ",\n"), built_query[2])
   cat(built_query)
+  clean_html(built_query)
   suggest_variables_template(subquery_args)
   invisible(paste(built_query, collapse = ""))
 }
