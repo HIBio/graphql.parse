@@ -225,8 +225,9 @@ query_builder <- function(schema = NULL, api_url = OT_API) {
   cat(built_query)
   clean_html(built_query)
   suggest_variables_template(subquery_args)
+  built_query <- paste(built_query, collapse = "")
   attr(built_query, "api_url") <- api_url
-  invisible(paste(built_query, collapse = ""))
+  invisible(built_query)
 }
 
 suggest_variables_template <- function(args) {

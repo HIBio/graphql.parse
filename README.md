@@ -257,6 +257,108 @@ endpoint just to retrieve the schema
 query_builder(schema = schema)
 ```
 
+Alternatively, the Genetics API can be used. When an `api_url` is
+specified in `query_builder()`, it is stored in the query string and
+accessible to `run_query`
+
+``` r
+> qs <- query_builder(api_url = OT_GENETICS_API)
+Options in Query; Select next level, or 0 to finish 
+
+ 1: object_class                           2: meta                                
+ 3: search                                 4: genes                               
+ 5: geneInfo                               6: studyInfo                           
+ 7: variantInfo                            8: studiesForGene                      
+ 9: studyLocus2GeneTable                  10: manhattan                           
+11: topOverlappedStudies                  12: overlapInfoForStudy                 
+13: tagVariantsAndStudiesForIndexVariant  14: indexVariantsAndStudiesForTagVariant
+15: pheWAS                                16: gecko                               
+17: regionPlot                            18: genesForVariantSchema               
+19: genesForVariant                       20: gwasRegional                        
+21: qtlRegional                           22: studyAndLeadVariantInfo             
+23: gwasCredibleSet                       24: qtlCredibleSet                      
+25: colocalisationsForGene                26: gwasColocalisationForRegion         
+27: gwasColocalisation                    28: qtlColocalisation                   
+29: studiesAndLeadVariantsForGene         30: studiesAndLeadVariantsForGeneByL2G  
+31: up 1 level                            
+
+Selection: 5
+Options in Gene; Select next level, or 0 to finish 
+
+ 1: id            2: symbol        3: bioType       4: description   5: chromosome    6: tss        
+ 7: start         8: end           9: fwdStrand    10: exons        11: up 1 level   
+
+Selection: 1
+Options in Gene; Select next level, or 0 to finish 
+
+ 1: id            2: symbol        3: bioType       4: description   5: chromosome    6: tss        
+ 7: start         8: end           9: fwdStrand    10: exons        11: up 1 level   
+
+Selection: 2
+Options in Gene; Select next level, or 0 to finish 
+
+ 1: id            2: symbol        3: bioType       4: description   5: chromosome    6: tss        
+ 7: start         8: end           9: fwdStrand    10: exons        11: up 1 level   
+
+Selection: 4
+Options in Gene; Select next level, or 0 to finish 
+
+ 1: id            2: symbol        3: bioType       4: description   5: chromosome    6: tss        
+ 7: start         8: end           9: fwdStrand    10: exons        11: up 1 level   
+
+Selection: 0
+query gql( 
+  $geneId: String! 
+) { 
+   geneInfo(geneId: $geneId) { 
+      id 
+      symbol 
+      description 
+   } 
+}
+
+Template for variables:
+
+variables = list(
+   geneId = character(1)
+)
+```
+
+``` r
+run_query(qs, variables = list(geneId = "ENSG00000197405"))
+#> $geneInfo
+#> $geneInfo$id
+#> [1] "ENSG00000197405"
+#> 
+#> $geneInfo$symbol
+#> [1] "C5AR1"
+#> 
+#> $geneInfo$description
+#> [1] "complement C5a receptor 1 [Source:HGNC Symbol;Acc:HGNC:1338]"
+```
+
+# Canned Queries
+
+Some canned queries are available. To fetch the `dataVersion`
+
+``` r
+dataVersion(OT_API)
+#> $name
+#> [1] "Open Targets GraphQL & REST API Beta"
+#> 
+#> $dataVersion
+#>      year     month iteration 
+#>        22         6         0
+
+dataVersion(OT_GENETICS_API)
+#> $name
+#> [1] "Open Targets Genetics Portal"
+#> 
+#> $dataVersion
+#> major minor patch 
+#>    22     2     0
+```
+
 # Documentation
 
 [This video](https://www.youtube.com/watch?v=_sZR0VxpwqE) provides a
