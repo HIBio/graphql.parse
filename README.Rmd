@@ -49,8 +49,8 @@ Options in Query; Select next level, or 0 to finish
 10: interactionResources    11: geneOntologyTerms       12: up 1 level            
 
 
-Selection: 7
-Options in [Drug!]!; Select next level, or 0 to finish 
+Selection: 6
+Options in Drug; Select next level, or 0 to finish 
 
  1: id                          2: name                        3: synonyms                 
  4: tradeNames                  5: yearOfFirstApproval         6: drugType                 
@@ -63,7 +63,7 @@ Options in [Drug!]!; Select next level, or 0 to finish
 25: up 1 level                 
 
 Selection: 1
-Options in [Drug!]!; Select next level, or 0 to finish 
+Options in Drug; Select next level, or 0 to finish 
 
  1: id                          2: name                        3: synonyms                 
  4: tradeNames                  5: yearOfFirstApproval         6: drugType                 
@@ -188,7 +188,7 @@ Options in Reference; Select next level, or 0 to finish
 
 Selection: 0
 query gql( 
-   $chemblId: String! 
+  $chemblId: String! 
 ) { 
    drug(chemblId: $chemblId) { 
       id 
@@ -209,7 +209,6 @@ query gql(
    } 
 }
 
-
 Template for variables:
 
 variables = list(
@@ -219,28 +218,8 @@ variables = list(
 
 ```{r, echo = FALSE}
 library(graphql.parse)
-query_string <- "
-query gql( 
-   $chemblId: String! 
-) { 
-   drug(chemblId: $chemblId) { 
-      id 
-      mechanismsOfAction { 
-         rows { 
-            mechanismOfAction 
-            targetName 
-            targets { 
-               id 
-               approvedSymbol 
-            } 
-            references { 
-               source 
-               urls 
-            } 
-         } 
-      } 
-   } 
-}"
+query_string <- structure("query gql(\n  $chemblId: String!\n) {\n   drug(chemblId: $chemblId) {\n      id\n      mechanismsOfAction {\n         rows {\n            mechanismOfAction\n            targetName\n            targets {\n               id\n               approvedSymbol\n            }\n            references {\n               source\n               urls\n            }\n         }\n      }\n   }\n}", api_url = "https://api.platform.opentargets.org/api/v4/graphql", class = c("query_string", 
+"character"))
 ```
 
 This `query_string` can then be passed along with the necessary variables to the API
@@ -331,17 +310,8 @@ variables = list(
 ```
 
 ```{r, echo = FALSE}
-qs <- "
-query gql( 
-  $geneId: String! 
-) { 
-   geneInfo(geneId: $geneId) { 
-      id 
-      symbol 
-      description 
-   } 
-}"
-attr(qs, "api_url") <- OT_GENETICS_API
+qs <- structure("query gql(\n  $geneId: String!\n) {\n   geneInfo(geneId: $geneId) {\n      id\n      symbol\n      description\n   }\n}", api_url = "https://api.genetics.opentargets.org/graphql", class = c("query_string", 
+"character"))
 ```
 
 ```{r}

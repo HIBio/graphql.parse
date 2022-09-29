@@ -7,8 +7,8 @@
 #' @export
 run_query <- function(query_string, variables, api_url = OT_API) {
   # if query_string has an attached api_url, use that
-  if (!is.null(stored_url <- attr(query_string, "api_url"))) {
-    api_url <- stored_url
+  if (!is.null(qs_api_url <- api_url(query_string))) {
+    api_url <- qs_api_url
   }
   # Construct POST request body object with query string and variables
   post_body <- list(query = query_string, variables = jsonlite::toJSON(variables, auto_unbox = TRUE))

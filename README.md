@@ -34,8 +34,8 @@ query_string <- query_builder()
     10: interactionResources    11: geneOntologyTerms       12: up 1 level            
 
 
-    Selection: 7
-    Options in [Drug!]!; Select next level, or 0 to finish 
+    Selection: 6
+    Options in Drug; Select next level, or 0 to finish 
 
      1: id                          2: name                        3: synonyms                 
      4: tradeNames                  5: yearOfFirstApproval         6: drugType                 
@@ -48,7 +48,7 @@ query_string <- query_builder()
     25: up 1 level                 
 
     Selection: 1
-    Options in [Drug!]!; Select next level, or 0 to finish 
+    Options in Drug; Select next level, or 0 to finish 
 
      1: id                          2: name                        3: synonyms                 
      4: tradeNames                  5: yearOfFirstApproval         6: drugType                 
@@ -173,7 +173,7 @@ query_string <- query_builder()
 
     Selection: 0
     query gql( 
-       $chemblId: String! 
+      $chemblId: String! 
     ) { 
        drug(chemblId: $chemblId) { 
           id 
@@ -193,7 +193,6 @@ query_string <- query_builder()
           } 
        } 
     }
-
 
     Template for variables:
 
@@ -345,6 +344,7 @@ Some canned queries are available. To fetch the `dataVersion`
 
 ``` r
 dataVersion(OT_API)
+#> Warning in api_url.default(query_string): No api_url detected on this object
 #> $name
 #> [1] "Open Targets GraphQL & REST API Beta"
 #> 
@@ -353,6 +353,7 @@ dataVersion(OT_API)
 #>        22         6         0
 
 dataVersion(OT_GENETICS_API)
+#> Warning in api_url.default(query_string): No api_url detected on this object
 #> $name
 #> [1] "Open Targets Genetics Portal"
 #> 
