@@ -101,7 +101,7 @@ parse_elements <- function(el, struct = "type", subquery = FALSE) {
       endpt <- FALSE
       subquery <- paste(endpt_lines, collapse = "\n")
       lst <- list(
-        subquery_class = sub('^.*[)]: ', '', endpt_lines[length(endpt_lines)]),
+        subquery_class = gsub("[]!", "", sub('^.*[)]: ', '', endpt_lines[length(endpt_lines)]), fixed = TRUE),
         subquery_description = ex_label$description
       )
       lst <- c(lst, parse_elements(subquery, subquery = TRUE))
@@ -178,6 +178,8 @@ query_builder <- function(schema = NULL, api_url = OT_API) {
   if (is.null(schema)) {
     schema <- get_schema(api_url)
   }
+  # drop union types
+  schema <- gsub("\nunion EntityUnionType = Target | Drug | Disease", "", schema, fixed = TRUE)
   schema_els <- strsplit(schema, "(?<=})", perl = TRUE)[[1]]
   # drop blank lines
   schema_els <- gsub("\n\n", "\n", schema_els)
@@ -291,6 +293,9 @@ examine_sel <- function(types, x, i, lvl, indent) {
     # non-atomic classes can be further subset
     res$is_sub <- TRUE
     clean_class <- gsub("\\[|\\]|!", "", x[[i]]$class)
+    if (!clean_class %in% names(types)) {
+      stop(paste0("Unable to find any entity of type `", clean_class, "` in the schema"))
+    }
     next_class <- parse_elements(types[names(types) == clean_class])
     next_class <- next_class[names(next_class) != "object_class"]
     res$next_avail <- next_class
