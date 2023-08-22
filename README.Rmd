@@ -334,4 +334,14 @@ dataVersion(OT_GENETICS_API)
 
 [![](https://img.youtube.com/vi/_sZR0VxpwqE/0.jpg)](https://www.youtube.com/watch?v=_sZR0VxpwqE)
 
+# Limitations
+
+This package is designed to work with any GraphQL schema, but is currently limited 
+to those endpoints which support a plaintext schema hosted at `<GRAPHQL_API>/schema`. 
+An improvement to this package would involve fetching the schema itself via the API.
+
+The OpenTargets (and OpenTargets Genetics) GraphQL APIs are currently supported and 
+the APIs are stored as exported variables in this package, `OT_API` and `OT_GENETICS_API`.
+
+
 [otgraphql]: https://www.youtube.com/watch?v=_sZR0VxpwqE

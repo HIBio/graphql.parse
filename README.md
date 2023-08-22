@@ -244,10 +244,9 @@ The schema can also be fetched once then re-used in additional queries
 schema <- get_schema()
 cat(substring(schema, 1, 50))
 #> type APIVersion {
-#>   x: Int!
-#>   y: Int!
-#>   z: Int!
-#> }
+#>   x: String!
+#>   y: String!
+#>   z: S
 ```
 
 This can then be used in the `query_builder()` without hitting the
@@ -350,7 +349,7 @@ dataVersion(OT_API)
 #> 
 #> $dataVersion
 #>      year     month iteration 
-#>        22         6         0
+#>      "23"      "06"       "0"
 
 dataVersion(OT_GENETICS_API)
 #> Warning in api_url.default(query_string): No api_url detected on this object
@@ -359,7 +358,7 @@ dataVersion(OT_GENETICS_API)
 #> 
 #> $dataVersion
 #> major minor patch 
-#>    22     2     0
+#>    22    10     0
 ```
 
 # Documentation
@@ -368,3 +367,14 @@ dataVersion(OT_GENETICS_API)
 great overview of the OpenTargets GraphQL API.
 
 [![](https://img.youtube.com/vi/_sZR0VxpwqE/0.jpg)](https://www.youtube.com/watch?v=_sZR0VxpwqE)
+
+# Limitations
+
+This package is designed to work with any GraphQL schema, but is
+currently limited to those endpoints which support a plaintext schema
+hosted at `<GRAPHQL_API>/schema`. An improvement to this package would
+involve fetching the schema itself via the API.
+
+The OpenTargets (and OpenTargets Genetics) GraphQL APIs are currently
+supported and the APIs are stored as exported variables in this package,
+`OT_API` and `OT_GENETICS_API`.
