@@ -40,6 +40,8 @@ library(graphql.parse)
 query_string <- query_builder()
 ```
 
+<img src="man/figures/demo.gif" />
+
 ```
 Options in Query; Select next level, or 0 to finish 
 

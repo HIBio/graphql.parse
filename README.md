@@ -26,6 +26,8 @@ library(graphql.parse)
 query_string <- query_builder()
 ```
 
+<img src="man/figures/demo.gif" />
+
     Options in Query; Select next level, or 0 to finish 
 
      1: meta                     2: target                   3: targets               
@@ -349,7 +351,7 @@ dataVersion(OT_API)
 #> 
 #> $dataVersion
 #>      year     month iteration 
-#>      "23"      "06"       "0"
+#>      "23"      "09"       "0"
 
 dataVersion(OT_GENETICS_API)
 #> Warning in api_url.default(query_string): No api_url detected on this object
