@@ -1,13 +1,14 @@
 Package: graphql.parse
 Type: Package
-Title: Parse GraphQL Syntax/Schema
+Title: Interactively Build GraphQL Queries
 Version: 0.1.0
 Authors@R: c(
-   person("Jonathan", "Carroll", email = "jonathan.carroll@hibio.com", role = c("aut", "cre"))
+   person("Jonathan", "Carroll", email = "jonathan.carroll@hibio.com", role = c("aut", "cre")),
+   person("Human Immunology Biosciences (HI·Bio)", role = c("cph", "fnd"))
  )
 Maintainer: Jonathan Carroll <jonathan.carroll@hibio.com>
-Description: Explorer and query the OpenTargets API(s).
-License: What license is it under?
+Description: Explore and query the OpenTargets GraphQL API(s).
+License: file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
