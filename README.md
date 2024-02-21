@@ -13,7 +13,7 @@ The goal of graphql.parse is to parse GraphQL schemas in an R-style way
 You can install the development version of graphql.parse like so:
 
 ``` r
-remotes::install_github("HIBio/graphql.parse)
+remotes::install_github("HIBio/graphql.parse")
 ```
 
 ## Example
